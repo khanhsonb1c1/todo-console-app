@@ -1,0 +1,14 @@
+/Users/son/CODE/toto-c-sharp/bin/Debug/net7.0/toto-c-sharp
+/Users/son/CODE/toto-c-sharp/bin/Debug/net7.0/toto-c-sharp.deps.json
+/Users/son/CODE/toto-c-sharp/bin/Debug/net7.0/toto-c-sharp.runtimeconfig.json
+/Users/son/CODE/toto-c-sharp/bin/Debug/net7.0/toto-c-sharp.dll
+/Users/son/CODE/toto-c-sharp/bin/Debug/net7.0/toto-c-sharp.pdb
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.AssemblyInfoInputs.cache
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.AssemblyInfo.cs
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.csproj.CoreCompileInputs.cache
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.dll
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/refint/toto-c-sharp.dll
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.pdb
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/toto-c-sharp.genruntimeconfig.cache
+/Users/son/CODE/toto-c-sharp/obj/Debug/net7.0/ref/toto-c-sharp.dll
