@@ -11,9 +11,9 @@ enum CommandType
 };
 
 // Định nghĩa các hằng số kích thước tối đa cho title, description, và time
-const int MAX_LENGTH_TITLE = 50;
-const int MAX_LENGTH_DESCRIPTION = 100;
-const int MAX_LENGTH_TIME = 20;
+const int MAX_LENGTH_TITLE = 100;
+const int MAX_LENGTH_DESCRIPTION = 200;
+const int MAX_LENGTH_TIME = 33;
 
 enum Status
 {
@@ -63,80 +63,79 @@ bool checkDescription(const std::string &description) {
 }
 
 bool isValidDate(const std::string &date) {
-    // Định dạng ngày tháng: hh/mm|dd/mo/yyyy
+    if (date.length() != 16) {
 
-    if (date.length() != 10) {
-        return false; // Độ dài phải là 10 ký tự
+        return false; // Độ dài chuỗi không đúng
     }
 
-    if (date[2] != '/' || date[5] != '|' || date[8] != '/') {
-        return false; // Các vị trí ký tự / và | phải chính xác
+    // Kiểm tra định dạng của chuỗi date
+    if (date[2] != ':' || date[5] != '|' || date[8] != '/' || date[11] != '/') {
+
+        return false; // Định dạng không đúng
     }
 
-    int hour, minute, day, month, year;
+    // Chuyển đổi và kiểm tra giờ và phút
+    int hour, minute;
+    std::istringstream(date.substr(0, 2)) >> hour;
+    std::istringstream(date.substr(3, 2)) >> minute;
 
-    if (std::istringstream(date.substr(0, 2)) >> hour &&
-        std::istringstream(date.substr(3, 2)) >> minute &&
-        std::istringstream(date.substr(6, 2)) >> day &&
-        std::istringstream(date.substr(9, 4)) >> year) {
-        // Kiểm tra giá trị của hour, minute, day, month, year nếu cần
-        // Ví dụ: hour phải trong khoảng từ 00 đến 23, month phải trong khoảng từ 01 đến 12, ...
+    // std::cout<<hour<<"___" << minute;
 
-        // Kiểm tra tháng và năm có giá trị hợp lệ
-        if (month < 1 || month > 12) {
-            return false; // Tháng không hợp lệ
-        }
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 60 ) {
 
-        if (year < 1900 || year > 2100) {
-            return false; // Năm không hợp lệ
-        }
-
-        // Kiểm tra ngày hợp lệ dựa trên tháng và năm
-        bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-
-        if (day < 1 || (day > 28 && month == 2 && !isLeapYear) ||
-            (day > 29 && month == 2 && isLeapYear) ||
-            (day > 30 && (month == 4 || month == 6 || month == 9 || month == 11)) ||
-            (day > 31)) {
-            return false; // Ngày không hợp lệ
-        }
-
-        // Kiểm tra giờ và phút nếu cần
-        if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-            return false; // Giờ hoặc phút không hợp lệ
-        }
-
-        return true; // Ngày tháng hợp lệ
+        return false; // Giờ hoặc phút không hợp lệ
     }
 
-    return false; // Không thể chuyển đổi thành số
+
+    // Chuyển đổi và kiểm tra ngày, tháng và năm
+    int day, month, year;
+    std::istringstream(date.substr(6, 2)) >> day;
+    std::istringstream(date.substr(9, 2)) >> month;
+    std::istringstream(date.substr(12, 4)) >> year;
+
+    if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > 2100) {
+
+        return false; // Ngày, tháng hoặc năm không hợp lệ
+    }
+
+    return true; // Chuỗi đúng định dạng
 }
 
 
 bool checkTime(const std::string &time) {
-    // Kiểm tra định dạng của chuỗi `time`
-    if (time.length() < 10 || time[2] != '/' || time[5] != '|' || time[10] != '-' || time[13] != '/' || time[16] != '/' || time.length() != 19) {
-        std::cout << "Định dạng thời gian không hợp lệ." << std::endl;
+    // Kiểm tra định dạng datetime1 và datetime2
+    if (time.length() < 35) {
+        std::cout << "Chuỗi quá ngắn để chứa datetime1 và datetime2." << std::endl;
         return false;
     }
+    std::string datetime1 = time.substr(0, 16);  // Lấy từ ký tự đầu tiên đến ký tự thứ 16
+    std::string datetime2 = time.substr(19);     // Bắt đầu từ ký tự thứ 19
+
+    // if (datetime1.length() != 16 || datetime2.length() != 16) {
+    //     std::cout << "Định dạng thời gian không hợp lệ." << std::endl;
+    //     return false;
+    // }
+
+    // if (datetime1[2] != ':' || datetime1[5] != '|' || datetime1[10] != '/' || datetime1[13] != '/' ||
+    //     datetime2[2] != ':' || datetime2[5] != '|' || datetime2[10] != '/' || datetime2[13] != '/') {
+    //     std::cout << "Định dạng thời gian không hợp lệ." << std::endl;
+    //     return false;
+    // }
 
     // Tách datetime1 và datetime2 từ chuỗi `time`
-    std::string datetime1 = time.substr(0, 10);
-    std::string datetime2 = time.substr(11);
 
     // Kiểm tra định dạng của datetime1 và datetime2
-    if (!isValidDate(datetime1) || !isValidDate(datetime2)) {
+    if (isValidDate(datetime1) && isValidDate(datetime2)) {
+        // Kiểm tra datetime2 luôn lớn hơn datetime1
+        // if (datetime1 > datetime2) {
+        //     std::cout << "datetime2 phải lớn hơn datetime1." << std::endl;
+        //     return false;
+        // }
+        return true;
+    } else {
         std::cout << "Định dạng ngày tháng không hợp lệ." << std::endl;
         return false;
     }
-
-    // Kiểm tra datetime2 luôn lớn hơn datetime1
-    if (datetime1 > datetime2) {
-        std::cout << "datetime2 phải lớn hơn datetime1." << std::endl;
-        return false;
-    }
-
-    return true;
 }
 
 void AddTask(const std::string &option)
@@ -171,6 +170,10 @@ void AddTask(const std::string &option)
                 return;
             }
 
+            if (checkTime(time) == false) {
+                return;
+            }
+
             // Đảm bảo sao chép không vượt quá giới hạn của các trường
             strncpy(newTask.title, title.c_str(), MAX_LENGTH_TITLE);
             newTask.title[MAX_LENGTH_TITLE] = '\0';
@@ -187,7 +190,7 @@ void AddTask(const std::string &option)
         }
         else
         {
-            std::cout << "Lệnh 'add' không hợp lệ." << std::endl;
+            std::cout << "Lệnh 'add' không hợp lệ (1)" << std::endl;
         }
     }
     else
@@ -225,8 +228,8 @@ void PrintTasks(const std::string &option)
 
 void showMenu()
 {
-    std::cout << "1. Add Task" << std::endl;
-    std::cout << "2. Show Task" << std::endl;
+    std::cout << "1. add new (add [title] [description] [time])" << std::endl;
+    std::cout << "2. Show Task (show #1)" << std::endl;
     std::cout << "3. Show All Tasks" << std::endl;
     std::cout << "4. Quit" << std::endl;
     std::cout << "Enter your choice: ";
@@ -263,8 +266,10 @@ CommandType getCommandType()
 int main()
 {
 
-    // AddTask(tasks, "Task 1", "Description 1", "2023-10-30");
-    // AddTask(tasks, "Task 2", "Description 2", "2023-10-31");
+
+    // checkTime("10:10|10/10/2023 - 15:10|10/10/2023");
+    // checkTime("927423");
+    // isValidDate("11:01|01/01/2023");
 
     getCommandType();
     // return 0;
