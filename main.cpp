@@ -122,7 +122,7 @@ bool checkTime(const std::string &time) {
     //     return false;
     // }
 
-    // Tách datetime1 và datetime2 từ chuỗi `time`
+    // Tách datetime1 và datetimze2 từ chuỗi `time`
 
     // Kiểm tra định dạng của datetime1 và datetime2
     if (isValidDate(datetime1) && isValidDate(datetime2)) {
@@ -270,7 +270,7 @@ int main()
     // checkTime("10:10|10/10/2023 - 15:10|10/10/2023");
     // checkTime("927423");
     // isValidDate("11:01|01/01/2023");
-
+// add [title] [description] [10:10|10/10/2023 - 15:10|10/10/2023]
     getCommandType();
     // return 0;
 }
