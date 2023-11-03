@@ -17,7 +17,7 @@ enum Status
     DONE,
     ARCHIVED
 };
-char *status_name[] = {"In Progress", "Done", "Archived"};
+char *status_name[] = {"In Progress","Done","Archived"};
 enum CommandType
 {
     ADD,
@@ -27,7 +27,7 @@ enum CommandType
     QUIT,
     INVALID
 };
-char *command_name[] = {"ADD", "EDIT", "SHOW", "DELETE", "QUIT", "INVALID"};
+char *command_name[] = {"ADD","EDIT","SHOW","DELETE","QUIT","INVALID"};
 
 struct Task
 {
@@ -102,11 +102,155 @@ bool isValidDateTime(const char *datetime)
     return true;
 }
 
+
+
+
+
+// ============== Y/c 1=========================
+// ------ Begin: Student Answer ------
+enum CommandType getCommandType(const char *command)
+{
+    if (strncmp(command, "add ", 4) == 0)
+    {
+        return ADD;
+    }
+    if (strncmp(command, "show ", 5) == 0)
+    {
+        return SHOW;
+    }
+    else if (strcmp(command, "quit") == 0)
+    {
+        return QUIT;
+    }
+    else
+    {
+        return INVALID;
+    }
+}
+
+
+// =============== Y/c 2===============
+
+
+
+void getTitleFromAdd(char *command, char *out_title)
+{
+    char title[MAX_LENGTH_TITLE+ 1] = "";
+    char description[MAX_LENGTH_DESCRIPTION+ 1] = "";
+    char time[MAX_LENGTH_TIME+ 1] = "";
+
+    if (sscanf(command, "add [%[^]]] [%[^]]] [%[^]]]", title, description, time) == 3)
+    {
+        // Sao chép title vào out_title
+        strncpy(out_title, title, MAX_LENGTH_TITLE);
+        out_title[MAX_LENGTH_TITLE] = '\0';
+        printf("title: %s, des: %s, time: %s \n", title, description, time);
+    }
+    else
+    {
+        printf("sai....");
+        // Không tìm thấy title, gán chuỗi rỗng cho out_title
+        out_title[0] = '\0';
+    }
+}
+
+void getTimeFromAdd(char *command, char *out_time)
+{
+    char title[MAX_LENGTH_TITLE + 1] = "";
+    char description[MAX_LENGTH_DESCRIPTION + 1] = "";
+    char time[MAX_LENGTH_TIME + 1] = "";
+
+    if (sscanf(command, "add [%[^]]] [%[^]]] [%[^]]]", title, description, time) == 3)
+    {
+        // Sao chép time vào out_time
+
+        strncpy(out_time, time, MAX_LENGTH_TIME);
+        out_time[MAX_LENGTH_TIME] = '\0';
+    }
+    else
+    {
+        // Không tìm thấy time, gán chuỗi rỗng cho out_time
+        out_time[0] = '\0';
+    }
+}
+
+void getDescriptionFromAdd(char *command, char *out_description)
+{
+    char title[MAX_LENGTH_TITLE+ 1] = "";
+    char description[MAX_LENGTH_DESCRIPTION+ 1] = "";
+    char time[MAX_LENGTH_TIME+ 1] = "";
+
+    if (sscanf(command, "add [%[^]]] [%[^]]] [%[^]]]", title, description, time) == 3)
+    {
+        // Sao chép mô tả vào out_description
+        strncpy(out_description, description, MAX_LENGTH_DESCRIPTION);
+        out_description[MAX_LENGTH_DESCRIPTION] = '\0';
+    }
+    else
+    {
+        out_description[0] = '\0';
+    }
+}
+
+
+
+
+// ===================== Y/c 3 ========================
+
+int checkTitle(const char *title)
+{
+    // Kiểm tra title không được bắt đầu hoặc kết thúc bằng khoảng trắng
+    if (isSpace(title[0]) || isSpace(title[strlen(title) - 1]))
+    {
+        printf("Title không được bắt đầu hoặc kết thúc bằng khoảng trắng.\n");
+        return 0;
+    }
+
+    // Kiểm tra độ dài title không vượt quá giới hạn
+    if (strlen(title) > MAX_LENGTH_TITLE)
+    {
+        printf("Title vượt quá độ dài cho phép.\n");
+        return strlen(title);
+    }
+
+    return -1;
+}
+
+
+// ================= Y/c 4 =========================================
+
+int checkDescription(const char *description)
+{
+    // Kiểm tra description không được bắt đầu hoặc kết thúc bằng khoảng trắng
+    if (isSpace(description[0]) || isSpace(description[strlen(description) - 1]))
+    {
+        printf("Description không được bắt đầu hoặc kết thúc bằng khoảng trắng.\n");
+        return 0;
+    }
+
+    // Kiểm tra độ dài description không vượt quá giới hạn
+    if (strlen(description) > MAX_LENGTH_DESCRIPTION)
+    {
+        printf("Description vượt quá độ dài cho phép.\n");
+        return strlen(description);
+    }
+
+    return -1;
+}
+
+
+
+
+
+
+
+// ==================== Y/c 5 ========================
+
 // Function to validate the date format
-bool checkTime(const char *date)
+bool checkTime(const char *raw_time)
 {
     // Kiểm tra độ dài của chuỗi
-    if (strlen(date) != 33)
+    if (strlen(raw_time) != 33)
     {
         printf("Độ dài không đúng\n");
         return false;
@@ -115,7 +259,7 @@ bool checkTime(const char *date)
     // Lấy datetime1 và datetime2 từ chuỗi
     char datetime1[17];
     char datetime2[17];
-    if (sscanf(date, "%16[^-]-%16s", datetime1, datetime2) != 2)
+    if (sscanf(raw_time, "%16[^-]-%16s", datetime1, datetime2) != 2)
     {
         printf("Định dạng thời gian không hợp lệ.\n");
         return false;
@@ -138,266 +282,13 @@ bool checkTime(const char *date)
     return true;
 }
 
-bool checkTitle(const char *title)
-{
-    // Kiểm tra title không được bắt đầu hoặc kết thúc bằng khoảng trắng
-    if (isSpace(title[0]) || isSpace(title[strlen(title) - 1]))
-    {
-        printf("Title không được bắt đầu hoặc kết thúc bằng khoảng trắng.\n");
-        return false;
-    }
-
-    // Kiểm tra độ dài title không vượt quá giới hạn
-    if (strlen(title) > MAX_LENGTH_TITLE)
-    {
-        printf("Title vượt quá độ dài cho phép.\n");
-        return false;
-    }
-
-    return true;
-}
-
-bool checkDescription(const char *description)
-{
-    // Kiểm tra description không được bắt đầu hoặc kết thúc bằng khoảng trắng
-    if (isSpace(description[0]) || isSpace(description[strlen(description) - 1]))
-    {
-        printf("Description không được bắt đầu hoặc kết thúc bằng khoảng trắng.\n");
-        return false;
-    }
-
-    // Kiểm tra độ dài description không vượt quá giới hạn
-    if (strlen(description) > MAX_LENGTH_DESCRIPTION)
-    {
-        printf("Description vượt quá độ dài cho phép.\n");
-        return false;
-    }
-
-    return true;
-}
-
-// ------ Begin: Student Answer ------
-enum CommandType getCommandType(const char *command)
-{
-    if (strncmp(command, "add ", 4) == 0)
-    {
-        return ADD;
-    }
-    if (strncmp(command, "show ", 5) == 0)
-    {
-        return SHOW;
-    }
-    else if (strcmp(command, "quit") == 0)
-    {
-        return QUIT;
-    }
-    else
-    {
-        return INVALID;
-    }
-}
-
-bool addTask(const char *command)
-{
-    // Check if the tasks array is full
-    if (numTasks >= MAX_NO_TASKS)
-    {
-        printf("Danh sách task đã đầy, không thể thêm nữa.\n");
-        return false;
-    }
-
-    // Parse the command to extract title, description, and time
-    char title[MAX_LENGTH_TITLE + 1] = "";
-    char description[MAX_LENGTH_DESCRIPTION + 1] = "";
-    char time[MAX_LENGTH_TIME + 1] = "";
-
-    if (sscanf(command, "add [%[^]]] [%[^]]] [%[^]]]", title, description, time) != 3)
-    {
-        printf("Lệnh 'add' không hợp lệ.\n");
-        return false;
-    }
-
-    // Validate title
-    if (!checkTitle(title))
-    {
-        // printf("Định dạng title không hợp lệ.\n");
-        return false;
-    }
-    // Validate description
-    if (!checkTitle(description))
-    {
-        // printf("Định dạng description không hợp lệ.\n");
-        return false;
-    }
-
-    // Validate the time format (you can implement date validation logic here)
-    if (!checkTime(time))
-    {
-        // printf("Định dạng thời gian không hợp lệ.\n");
-        return false;
-    }
-
-    // Create a new task
-    struct Task newTask;
-    newTask.num = numTasks + 1;
-    strncpy(newTask.title, title, MAX_LENGTH_TITLE);
-    strncpy(newTask.description, description, MAX_LENGTH_DESCRIPTION);
-    strncpy(newTask.time, time, MAX_LENGTH_TIME);
-
-    // Add the new task to the tasks array
-    tasks[numTasks] = newTask;
-    numTasks++;
-
-    printf("Task '%s' đã được thêm vào danh sách.\n", title);
-    return true;
-}
-
-// void printAllTasks()
-// {
-//     if (numTasks == 0)
-//     {
-//         printf("Danh sách task hiện đang trống.\n");
-//         return;
-//     }
-
-//     printf("Danh sách task:\n");
-
-//     for (int i = 0; i < numTasks; i++)
-//     {
-//         struct Task *taskDisplay = &tasks[numTasks];
-//         printTask(taskDisplay);
-
-//         // printf("Task #%d:\n", tasks[i].num);
-//         // printf("Title: %s\n", tasks[i].title);
-//         // printf("Description: %s\n", tasks[i].description);
-//         // printf("Time: %s\n", tasks[i].time);
-//         // printf("Status: %s\n", status_name[tasks[i].status]);
-//         // printf("------------------------------\n");
-//     }
-// }
-
-void printAllTasks()
-{
-
-    for (int i = 0; i < numTasks; i++)
-    {
-        struct Task *taskToDisplay = &tasks[i];
-        printTask(taskToDisplay);
-    }
-}
-
-void printTaskByNum(int num)
-{
-    if (num >= 0 && num < numTasks)
-    {
-        struct Task *taskToDisplay = &tasks[num - 1];
-        printTask(taskToDisplay);
-    }
-    else
-    {
-        printf("Số thứ tự task không hợp lệ.\n");
-    }
-}
-
-void printHeadTask(struct Task *array_tasks, int numTasks, int num)
-{
-    int printCount = (num < numTasks) ? num : numTasks; // Số lượng task cần hiển thị
-    for (int i = 0; i < printCount; i++)
-    {
-        printf("%d. %s\n", i + 1, array_tasks[i].title);
-    }
-}
-
-void printTailTask(struct Task *tasks, int numTasks, int num)
-{
-    int startIdx = (numTasks > num) ? (numTasks - num) : 0; // Vị trí bắt đầu
-    int endIdx = numTasks;                                  // Vị trí kết thúc
-
-    for (int i = startIdx; i < endIdx; i++)
-    {
-        printf("%d. %s\n", i + 1, tasks[i].title);
-    }
-}
-
-int getFieldFromEdit(char *edit_cmd)
-{
-    char *edit_title = strstr(edit_cmd, " title:[");
-    char *edit_description = strstr(edit_cmd, " description:[");
-    char *edit_time = strstr(edit_cmd, " time:[");
-    char *edit_status = strstr(edit_cmd, " status:[");
-
-    if (edit_title)
-    {
-        printf("1");
-        return 1; // Thay đổi title
-    }
-    else if (edit_description)
-    {
-        return 2; // Thay đổi description
-    }
-    else if (edit_time)
-    {
-        return 3; // Thay đổi time
-    }
-    else if (edit_status)
-    {
-        return 4; // Thay đổi status
-    }
-    else
-    {
-        return 0; // Không hợp lệ
-    }
-}
-int getNumFromCommand(char *command)
-{
-    int num = -1; // Giá trị mặc định nếu không tìm thấy
-
-    // Sử dụng sscanf để tìm và trích xuất giá trị <num>
-    if (sscanf(command, "%*[^#]#%d", &num) == 1)
-    {
-        if (num < 0 || num >= numTasks)
-        {
-            printf("Lỗi: Số thứ tự không hợp lệ. (Phải nằm trong khoảng từ 0 đến %d)\n", numTasks - 1);
-            return -1;
-        }
-        return num;
-    }
-    
-    printf("Lỗi: Không tìm thấy số thứ tự trong câu lệnh.\n");
-    return -1; // Trả về -1 nếu không tìm thấy hoặc lỗi
-}
 
 
-// void getTitleFromEdit(char *command, char *out_title)
-// {
-//     // Tìm vị trí của "title:[" trong lệnh edit
-//     char *title_start = strstr(command, " title:[");
 
-//     if (title_start)
-//     {
-//         // Di chuyển con trỏ đến sau "title:["
-//         title_start += strlen(" title:[");
 
-//         // Tìm vị trí kết thúc của tiêu đề (thường là ký tự ']')
-//         char *title_end = strchr(title_start, ']');
 
-//         if (title_end)
-//         {
-//             // Tính độ dài của tiêu đề
-//             int title_length = title_end - title_start;
+// =========== Y/c 6 ======================
 
-//             // Sao chép tiêu đề vào out_title
-//             strncpy(out_title, title_start, title_length);
-//             out_title[title_length] = '\0';
-//             printf(out_title);
-//         }
-//     }
-//     else
-//     {
-//         // Không tìm thấy tiêu đề, gán chuỗi rỗng cho out_title
-//         out_title[0] = '\0';
-//     }
-// }
 
 void getTitleFromEdit(char *command, char *out_title)
 {
@@ -489,6 +380,73 @@ void getTimeFromEdit(char *command, char *out_time)
     }
 }
 
+
+
+// ==================== Y/c 7 ========================
+
+
+int getNumFromCommand(char *command)
+{
+    int num = -1; // Giá trị mặc định nếu không tìm thấy
+
+    // Sử dụng sscanf để tìm và trích xuất giá trị <num>
+    if (sscanf(command, "%*[^#]#%d", &num) == 1)
+    {
+        if (num < 0 || num >= numTasks)
+        {
+            printf("Lỗi: Số thứ tự không hợp lệ. (Phải nằm trong khoảng từ 0 đến %d)\n", numTasks - 1);
+            return -1;
+        }
+        return num;
+    }
+
+    printf("Lỗi: Không tìm thấy số thứ tự trong câu lệnh.\n");
+    return -1; // Trả về -1 nếu không tìm thấy hoặc lỗi
+}
+
+
+
+
+
+// ================== Y/c 8 ====================================
+
+int getFieldFromEdit(char *edit_cmd)
+{
+    char *edit_title = strstr(edit_cmd, " title:[");
+    char *edit_description = strstr(edit_cmd, " description:[");
+    char *edit_time = strstr(edit_cmd, " time:[");
+    char *edit_status = strstr(edit_cmd, " status:[");
+
+    if (edit_title)
+    {
+        printf("1");
+        return 1; // Thay đổi title
+    }
+    else if (edit_description)
+    {
+        return 2; // Thay đổi description
+    }
+    else if (edit_time)
+    {
+        return 3; // Thay đổi time
+    }
+    else if (edit_status)
+    {
+        return 4; // Thay đổi status
+    }
+    else
+    {
+        return 0; // Không hợp lệ
+    }
+}
+
+
+
+
+
+// ================ Y/c 9 ================================
+
+
 enum Status getStatusFromEdit(char *edit_cmd)
 {
     enum Status status = IN_PROGRESS; // Giá trị mặc định
@@ -515,6 +473,147 @@ enum Status getStatusFromEdit(char *edit_cmd)
 
     return status;
 }
+
+
+// ================ Y/c 10 =================
+
+void printAllTasks(struct Task *array_tasks, int no_tasks)
+ // no_tasks: so luong phan tu trong mảng <=> numTasks đc khai báo ở dòng 43
+ // array_tasks: mang <=> tasks được khai báo ở dòng 42
+{
+
+    for (int i = 0; i < no_tasks; i++)
+    {
+        struct Task *taskToDisplay = &array_tasks[i];
+        printTask(taskToDisplay);
+    }
+}
+
+
+// =================== Y/C 11 ====================================
+
+void printTaskByNum(struct Task *array_tasks, int no_tasks, int quan)
+{
+    if (quan >= 0 && quan < no_tasks)
+    {
+        struct Task *taskToDisplay = &array_tasks[quan - 1];
+        printTask(taskToDisplay);
+    }
+    else
+    {
+        printf("Số thứ tự task không hợp lệ.\n");
+    }
+}
+
+
+// ===================== Y/c 12========================================
+void printHeadTask(struct Task *array_tasks, int numTasks, int num)
+{
+    int printCount = (num < numTasks) ? num : numTasks; // Số lượng task cần hiển thị
+    for (int i = 0; i < printCount; i++)
+    {
+        printf("%d. %s\n", i + 1, array_tasks[i].title);
+    }
+}
+
+
+// =================== Y/c 13 ========================================
+
+void printTailTask(struct Task *array_tasks, int no_tasks, int quan)
+{
+    int startIdx = (no_tasks > quan) ? (no_tasks - quan) : 0; // Vị trí bắt đầu
+    int endIdx = no_tasks;                                  // Vị trí kết thúc
+
+    for (int i = startIdx; i < endIdx; i++)
+    {
+        printf("%d. %s\n", i + 1, array_tasks[i].title);
+    }
+}
+
+
+// =================== Y/c 14 =============================
+
+void printFilteredTaskByTitle(struct Task *array_tasks, int no_tasks, const char *filter_title) {
+    printf("Các nhiệm vụ có tiêu đề chứa \"%s\":\n", filter_title);
+    for (int i = 0; i < no_tasks; i++) {
+        if (strstr(array_tasks[i].title, filter_title)) {
+            printTask(&array_tasks[i]);
+        }
+    }
+}
+
+// ==================== Y/c 15 ===========================
+
+void printFilteredTaskByDescription(struct Task *array_tasks, int no_tasks, const char *filter_description) {
+    printf("Các nhiệm vụ có mô tả chứa \"%s\":\n", filter_description);
+    for (int i = 0; i < no_tasks; i++) {
+        if (strstr(array_tasks[i].description, filter_description)) {
+            printTask(&array_tasks[i]);
+        }
+    }
+}
+
+
+// ====================== y/c 16 =========================
+
+void printFilteredTaskByStatus(struct Task *array_tasks, int no_tasks, enum Status filter_status) {
+    printf("Các nhiệm vụ có trạng thái \"%s\":\n", status_name[filter_status]);
+    for (int i = 0; i < no_tasks; i++) {
+        if (array_tasks[i].status == filter_status) {
+            printTask(&array_tasks[i]);
+        }
+    }
+}
+
+
+
+
+// ================== Y/c 17 ===============================
+
+bool addTask (struct Task*array_tasks, int no_tasks, char *new_title, char *new_description, char *new_time) {
+// Với no_tasks: số lượng các phần tử trong mảng 
+// new_title: tiêu đề task
+// new_description: mô tả task
+// new_time: thời gian thực hiện task
+// Yêu cầu: thêm mới task vào cuối mảng
+// output: Nếu thành công thì trả về true.
+
+if (no_tasks >= MAX_NO_TASKS) {
+        // Kiểm tra xem mảng đã đầy chưa
+        printf("Không thể thêm nhiệm vụ mới. Mảng đã đầy.\n");
+        return false;
+    }
+
+    struct Task new_task;
+    new_task.num = no_tasks + 1; // Tính số thứ tự mới cho nhiệm vụ
+
+    if (strlen(new_title) > MAX_LENGTH_TITLE || strlen(new_description) > MAX_LENGTH_DESCRIPTION || strlen(new_time) > MAX_LENGTH_TIME) {
+        // Kiểm tra độ dài các trường dữ liệu
+        printf("Dữ liệu quá dài. Không thể thêm nhiệm vụ.\n");
+        return false;
+    }
+
+    strcpy(new_task.title, new_title);
+    strcpy(new_task.description, new_description);
+    strcpy(new_task.time, new_time);
+
+    // Thiết lập trạng thái mặc định (ví dụ: IN_PROGRESS)
+    new_task.status = IN_PROGRESS;
+
+    // Thêm nhiệm vụ mới vào mảng
+    array_tasks[no_tasks] = new_task;
+
+    // Cập nhật lại số lượng nhiệm vụ
+    numTasks++;
+
+    // printf("Them task thanh cong: %s, #%s",no_tasks, new_task.title);
+
+
+    return true;
+}
+
+
+// ========================== y/c 18 ==========================
 
 bool deleteTask(struct Task *array_tasks, int *no_tasks, int num)
 {
@@ -556,7 +655,7 @@ void runTodoApp()
         if (commandType == ADD)
         {
             // If the command is ADD, call the addTask function
-            addTask(command);
+            // addTask(command);
 
             runTodoApp();
         }
@@ -566,28 +665,14 @@ void runTodoApp()
 
             if (strncmp(command, "show #", 6) == 0)
             {
-                // printTask(command);
                 // Xử lý lệnh "show #[number]" và hiển thị task theo số thứ tự
-                int taskNumber;
-                if (sscanf(command + 6, "%d", &taskNumber) == 1)
-                {
-                    if (taskNumber >= 1 && taskNumber <= numTasks)
-                    {
-                        printTaskByNum(taskNumber);
-                    }
-                    else
-                    {
-                        printf("Số thứ tự task không hợp lệ.\n");
-                    }
-                }
-                else
-                {
-                    printf("Lệnh không hợp lệ.\n");
-                }
+                int num; // sử dụng getNumFrom để lấy num
+                printTaskByNum(tasks, numTasks, num);
+                
             }
             else if (strcmp(command, "show all") == 0)
             {
-                printAllTasks();
+                printAllTasks(tasks, numTasks);
             }
             else
             {
@@ -614,37 +699,72 @@ void runTodoApp()
     }
 }
 
+
+// Test hàm addTask
+void testAddTask() {
+
+    // char newTitle[MAX_LENGTH_TITLE];
+    // char newDescription[MAX_LENGTH_DESCRIPTION];
+    // char newTime[MAX_LENGTH_TIME];
+
+    // // Thêm 5 nhiệm vụ
+    // for (int i = 0; i < 5; i++) {
+    //     snprintf(newTitle, MAX_LENGTH_TITLE, "Task %d", i + 1);
+    //     snprintf(newDescription, MAX_LENGTH_DESCRIPTION, "Description for Task %d", i + 1);
+    //     snprintf(newTime, MAX_LENGTH_TIME, "10:00|01/01/2023-11:00|01/01/2023");
+
+    //     if (addTask(tasks, numTasks, newTitle, newDescription, newTime)) {
+    //         // numTasks++;
+    //         printf("Nhiệm vụ %d đã được thêm vào mảng.\n", i + 1);
+    //     }
+    // }
+
+    
+    if (addTask(tasks, numTasks, "tit 1", "des 1", "10:00|01/11/2023-11:00|03/11/2023")) {
+            printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
+    }
+    if (addTask(tasks, numTasks, "tit 2", "des 3", "10:00|05/11/2023-11:00|07/11/2023")) {
+            printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
+    }
+    if (addTask(tasks, numTasks, "tit 3", "des 3", "10:00|10/11/2023-11:00|13/11/2023")) {
+            printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
+    }
+   
+
+}
+
+
+void testShowWeekTime() {
+    char command[] = "show week time:[<date>]";
+}
+
 int main()
 {
-    // test thêm dữ liệu mẫu
-    addTask("add [Example Title1] [Example Description1] [10:00|01/01/2023-11:00|01/01/2023]");
-    addTask("add [Example Title2] [Example Description2] [10:00|01/01/2023-11:00|01/01/2023]");
-    addTask("add [Example Title3] [Example Description3] [10:00|01/01/2023-11:00|01/01/2023]");
 
-    // test khoảng trắng
-    //  addTask("add [Example Title ] [Example Description1] [10:00|01/01/2023-11:00|01/01/2023]");
+    // runTodoApp();
+     // edit #<num> title:[<title2>]
+    // edit #<num> description:[<description2>]
+    // edit #<num> time:[<time2>]
+    // edit #<num> status:[<status2>]
 
-    // test thời gian - sai định dạng
-    // addTask("add [Example Title] [Example Description1] [10:00001/01/2023-11:00|01/01/2023]");
-    // sai độ dài
-    // addTask("add [Example Title] [Example Description1] [1/01/2023-11:00|01/01/2023]");
 
-    // test thời gian - ngày tháng k hợp lệ
-    // addTask("add [Example Title] [Example Description1] [40:00|01/01/2023-11:00|01/01/2023]");
+    // test hàm addTask, thêm dữ liệu ban đầu để thực hiện các hàm show, edit, delete
+    testAddTask();
+
+    // Test hàm printTask
+    // printAllTasks(tasks, numTasks);
+
+    // Test hàm filterTitle Yêu cầu 14
+    printFilteredTaskByTitle(tasks, numTasks, "tit 3");
+
 
     // test show task 1
     // printTaskByNum(1);
-    // runTodoApp();
 
     // printHeadTask(tasks, numTasks, 1);
     // printTailTask(tasks, numTasks, 10 );
 
     // printAllTasks();
-
-    // edit #<num> title:[<title2>]
-    // edit #<num> description:[<description2>]
-    // edit #<num> time:[<time2>]
-    // edit #<num> status:[<status2>]
 
     // test get rdit field
 
@@ -668,11 +788,26 @@ int main()
 
     // check getNum
 
-   int num1 = getNumFromCommand("edit #2 title:[New Title]");
-    if (num1 >= 0)
-    {
-        printf("Kết quả: %d\n", num1);
-    }
+    //    int num1 = getNumFromCommand("edit #2 title:[New Title]");
+    //     if (num1 >= 0)
+    //     {
+    //         printf("Kết quả: %d\n", num1);
+    //     }
+
+    // test getTitleFromAdd
+    // char command[] = "add [Example Title1] [Example Description1] [10:00|01/01/2023-11:00|01/01/2023]";
+
+    // char title[MAX_LENGTH_TITLE + 1] = "";
+    // char description[MAX_LENGTH_DESCRIPTION + 1] = "";
+    // char time[MAX_LENGTH_TIME + 1] = "";
+
+    // getTitleFromAdd(command, title);
+    // getDescriptionFromAdd(command, description);
+    // getTimeFromAdd(command, time);
+
+    // printf("Title: %s\n", title);
+    // printf("Description: %s\n", description);
+    // printf("Time: %s\n", time);
 
     return 0;
 }
