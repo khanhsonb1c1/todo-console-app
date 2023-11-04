@@ -17,7 +17,7 @@ enum Status
     DONE,
     ARCHIVED
 };
-char *status_name[] = {"In Progress","Done","Archived"};
+char *status_name[] = {"In Progress", "Done", "Archived"};
 enum CommandType
 {
     ADD,
@@ -27,7 +27,7 @@ enum CommandType
     QUIT,
     INVALID
 };
-char *command_name[] = {"ADD","EDIT","SHOW","DELETE","QUIT","INVALID"};
+char *command_name[] = {"ADD", "EDIT", "SHOW", "DELETE", "QUIT", "INVALID"};
 
 struct Task
 {
@@ -48,6 +48,7 @@ void printTask(struct Task *task)
     printf("Num: #%d. Title: %s\n", task->num, task->title);
     printf("Description: %s\n", task->description);
     printf("Status: %s\n", status_name[task->status]);
+    printf("Time: %s\n", task->time);
     printf("--------------------------------------------\n");
 }
 
@@ -102,10 +103,6 @@ bool isValidDateTime(const char *datetime)
     return true;
 }
 
-
-
-
-
 // ============== Y/c 1=========================
 // ------ Begin: Student Answer ------
 enum CommandType getCommandType(const char *command)
@@ -128,23 +125,20 @@ enum CommandType getCommandType(const char *command)
     }
 }
 
-
 // =============== Y/c 2===============
-
-
 
 void getTitleFromAdd(char *command, char *out_title)
 {
-    char title[MAX_LENGTH_TITLE+ 1] = "";
-    char description[MAX_LENGTH_DESCRIPTION+ 1] = "";
-    char time[MAX_LENGTH_TIME+ 1] = "";
+    char title[MAX_LENGTH_TITLE + 1] = "";
+    char description[MAX_LENGTH_DESCRIPTION + 1] = "";
+    char time[MAX_LENGTH_TIME + 1] = "";
 
     if (sscanf(command, "add [%[^]]] [%[^]]] [%[^]]]", title, description, time) == 3)
     {
         // Sao chép title vào out_title
         strncpy(out_title, title, MAX_LENGTH_TITLE);
         out_title[MAX_LENGTH_TITLE] = '\0';
-        printf("title: %s, des: %s, time: %s \n", title, description, time);
+        // printf("title: %s, des: %s, time: %s \n", title, description, time);
     }
     else
     {
@@ -176,9 +170,9 @@ void getTimeFromAdd(char *command, char *out_time)
 
 void getDescriptionFromAdd(char *command, char *out_description)
 {
-    char title[MAX_LENGTH_TITLE+ 1] = "";
-    char description[MAX_LENGTH_DESCRIPTION+ 1] = "";
-    char time[MAX_LENGTH_TIME+ 1] = "";
+    char title[MAX_LENGTH_TITLE + 1] = "";
+    char description[MAX_LENGTH_DESCRIPTION + 1] = "";
+    char time[MAX_LENGTH_TIME + 1] = "";
 
     if (sscanf(command, "add [%[^]]] [%[^]]] [%[^]]]", title, description, time) == 3)
     {
@@ -191,9 +185,6 @@ void getDescriptionFromAdd(char *command, char *out_description)
         out_description[0] = '\0';
     }
 }
-
-
-
 
 // ===================== Y/c 3 ========================
 
@@ -216,7 +207,6 @@ int checkTitle(const char *title)
     return -1;
 }
 
-
 // ================= Y/c 4 =========================================
 
 int checkDescription(const char *description)
@@ -237,12 +227,6 @@ int checkDescription(const char *description)
 
     return -1;
 }
-
-
-
-
-
-
 
 // ==================== Y/c 5 ========================
 
@@ -282,13 +266,7 @@ bool checkTime(const char *raw_time)
     return true;
 }
 
-
-
-
-
-
 // =========== Y/c 6 ======================
-
 
 void getTitleFromEdit(char *command, char *out_title)
 {
@@ -380,10 +358,7 @@ void getTimeFromEdit(char *command, char *out_time)
     }
 }
 
-
-
 // ==================== Y/c 7 ========================
-
 
 int getNumFromCommand(char *command)
 {
@@ -403,10 +378,6 @@ int getNumFromCommand(char *command)
     printf("Lỗi: Không tìm thấy số thứ tự trong câu lệnh.\n");
     return -1; // Trả về -1 nếu không tìm thấy hoặc lỗi
 }
-
-
-
-
 
 // ================== Y/c 8 ====================================
 
@@ -440,12 +411,7 @@ int getFieldFromEdit(char *edit_cmd)
     }
 }
 
-
-
-
-
 // ================ Y/c 9 ================================
-
 
 enum Status getStatusFromEdit(char *edit_cmd)
 {
@@ -474,12 +440,11 @@ enum Status getStatusFromEdit(char *edit_cmd)
     return status;
 }
 
-
 // ================ Y/c 10 =================
 
 void printAllTasks(struct Task *array_tasks, int no_tasks)
- // no_tasks: so luong phan tu trong mảng <=> numTasks đc khai báo ở dòng 43
- // array_tasks: mang <=> tasks được khai báo ở dòng 42
+// no_tasks: so luong phan tu trong mảng <=> numTasks đc khai báo ở dòng 43
+// array_tasks: mang <=> tasks được khai báo ở dòng 42
 {
 
     for (int i = 0; i < no_tasks; i++)
@@ -488,7 +453,6 @@ void printAllTasks(struct Task *array_tasks, int no_tasks)
         printTask(taskToDisplay);
     }
 }
-
 
 // =================== Y/C 11 ====================================
 
@@ -505,7 +469,6 @@ void printTaskByNum(struct Task *array_tasks, int no_tasks, int quan)
     }
 }
 
-
 // ===================== Y/c 12========================================
 void printHeadTask(struct Task *array_tasks, int numTasks, int num)
 {
@@ -516,13 +479,12 @@ void printHeadTask(struct Task *array_tasks, int numTasks, int num)
     }
 }
 
-
 // =================== Y/c 13 ========================================
 
 void printTailTask(struct Task *array_tasks, int no_tasks, int quan)
 {
     int startIdx = (no_tasks > quan) ? (no_tasks - quan) : 0; // Vị trí bắt đầu
-    int endIdx = no_tasks;                                  // Vị trí kết thúc
+    int endIdx = no_tasks;                                    // Vị trí kết thúc
 
     for (int i = startIdx; i < endIdx; i++)
     {
@@ -530,13 +492,15 @@ void printTailTask(struct Task *array_tasks, int no_tasks, int quan)
     }
 }
 
-
 // =================== Y/c 14 =============================
 
-void printFilteredTaskByTitle(struct Task *array_tasks, int no_tasks, const char *filter_title) {
+void printFilteredTaskByTitle(struct Task *array_tasks, int no_tasks, const char *filter_title)
+{
     printf("Các nhiệm vụ có tiêu đề chứa \"%s\":\n", filter_title);
-    for (int i = 0; i < no_tasks; i++) {
-        if (strstr(array_tasks[i].title, filter_title)) {
+    for (int i = 0; i < no_tasks; i++)
+    {
+        if (strstr(array_tasks[i].title, filter_title))
+        {
             printTask(&array_tasks[i]);
         }
     }
@@ -544,41 +508,45 @@ void printFilteredTaskByTitle(struct Task *array_tasks, int no_tasks, const char
 
 // ==================== Y/c 15 ===========================
 
-void printFilteredTaskByDescription(struct Task *array_tasks, int no_tasks, const char *filter_description) {
+void printFilteredTaskByDescription(struct Task *array_tasks, int no_tasks, const char *filter_description)
+{
     printf("Các nhiệm vụ có mô tả chứa \"%s\":\n", filter_description);
-    for (int i = 0; i < no_tasks; i++) {
-        if (strstr(array_tasks[i].description, filter_description)) {
+    for (int i = 0; i < no_tasks; i++)
+    {
+        if (strstr(array_tasks[i].description, filter_description))
+        {
             printTask(&array_tasks[i]);
         }
     }
 }
-
 
 // ====================== y/c 16 =========================
 
-void printFilteredTaskByStatus(struct Task *array_tasks, int no_tasks, enum Status filter_status) {
+void printFilteredTaskByStatus(struct Task *array_tasks, int no_tasks, enum Status filter_status)
+{
     printf("Các nhiệm vụ có trạng thái \"%s\":\n", status_name[filter_status]);
-    for (int i = 0; i < no_tasks; i++) {
-        if (array_tasks[i].status == filter_status) {
+    for (int i = 0; i < no_tasks; i++)
+    {
+        if (array_tasks[i].status == filter_status)
+        {
             printTask(&array_tasks[i]);
         }
     }
 }
 
-
-
-
 // ================== Y/c 17 ===============================
 
-bool addTask (struct Task*array_tasks, int no_tasks, char *new_title, char *new_description, char *new_time) {
-// Với no_tasks: số lượng các phần tử trong mảng 
-// new_title: tiêu đề task
-// new_description: mô tả task
-// new_time: thời gian thực hiện task
-// Yêu cầu: thêm mới task vào cuối mảng
-// output: Nếu thành công thì trả về true.
+bool addTask(struct Task *array_tasks, int no_tasks, char *new_title, char *new_description, char *new_time)
+{
+    // Với no_tasks: số lượng các phần tử trong mảng
+    // new_title: tiêu đề task
+    // new_description: mô tả task
+    // new_time: thời gian thực hiện task
+    // Yêu cầu: thêm mới task vào cuối mảng
+    // output: Nếu thành công thì trả về true.
 
-if (no_tasks >= MAX_NO_TASKS) {
+    if (no_tasks >= MAX_NO_TASKS)
+    {
         // Kiểm tra xem mảng đã đầy chưa
         printf("Không thể thêm nhiệm vụ mới. Mảng đã đầy.\n");
         return false;
@@ -587,14 +555,17 @@ if (no_tasks >= MAX_NO_TASKS) {
     struct Task new_task;
     new_task.num = no_tasks + 1; // Tính số thứ tự mới cho nhiệm vụ
 
-    if (strlen(new_title) > MAX_LENGTH_TITLE || strlen(new_description) > MAX_LENGTH_DESCRIPTION || strlen(new_time) > MAX_LENGTH_TIME) {
+    if (strlen(new_title) > MAX_LENGTH_TITLE || strlen(new_description) > MAX_LENGTH_DESCRIPTION || strlen(new_time) > MAX_LENGTH_TIME)
+    {
         // Kiểm tra độ dài các trường dữ liệu
         printf("Dữ liệu quá dài. Không thể thêm nhiệm vụ.\n");
         return false;
     }
 
     strcpy(new_task.title, new_title);
+
     strcpy(new_task.description, new_description);
+
     strcpy(new_task.time, new_time);
 
     // Thiết lập trạng thái mặc định (ví dụ: IN_PROGRESS)
@@ -608,10 +579,8 @@ if (no_tasks >= MAX_NO_TASKS) {
 
     // printf("Them task thanh cong: %s, #%s",no_tasks, new_task.title);
 
-
     return true;
 }
-
 
 // ========================== y/c 18 ==========================
 
@@ -668,7 +637,6 @@ void runTodoApp()
                 // Xử lý lệnh "show #[number]" và hiển thị task theo số thứ tự
                 int num; // sử dụng getNumFrom để lấy num
                 printTaskByNum(tasks, numTasks, num);
-                
             }
             else if (strcmp(command, "show all") == 0)
             {
@@ -699,9 +667,9 @@ void runTodoApp()
     }
 }
 
-
 // Test hàm addTask
-void testAddTask() {
+void testAddTask()
+{
 
     // char newTitle[MAX_LENGTH_TITLE];
     // char newDescription[MAX_LENGTH_DESCRIPTION];
@@ -719,44 +687,128 @@ void testAddTask() {
     //     }
     // }
 
-    
-    if (addTask(tasks, numTasks, "tit 1", "des 1", "10:00|01/11/2023-11:00|03/11/2023")) {
-            printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
-    }
-    if (addTask(tasks, numTasks, "tit 2", "des 3", "10:00|05/11/2023-11:00|07/11/2023")) {
-            printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
-    }
-    if (addTask(tasks, numTasks, "tit 3", "des 3", "10:00|10/11/2023-11:00|13/11/2023")) {
-            printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
-    }
-   
+    if (addTask(tasks, numTasks, "tit 1", "des 1", "10:00|01/11/2023-11:00|03/11/2023"))
+    {
+        printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
 
+    }
+    if (addTask(tasks, numTasks, "tit 2", "des 3", "10:00|05/11/2023-11:00|07/11/2023"))
+    {
+        printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
+
+    }
+    if (addTask(tasks, numTasks, "tit 3", "des 3", "10:00|10/11/2023-11:00|13/11/2023"))
+    {
+        printf("Nhiệm vụ %d đã được thêm vào mảng.\n", numTasks);
+
+    }
 }
 
+// ================== Y/c 19 ==================
 
-void testShowWeekTime() {
+
+void printWeekTime(struct Task *tasks, int no_tasks, char *date) {
+    // Lấy ngày trong tuần từ chuỗi date (ví dụ: "tus-15/11/2023")
+    char weekday[4];
+    int day, month, year;
+    if (sscanf(date, "%3s-%d/%d/%d", weekday, &day, &month, &year) != 4) {
+        printf("Chuỗi ngày không hợp lệ.\n");
+        return;
+    }
+
+    // Xác định thứ trong tuần dựa vào chuỗi weekday (ví dụ: "tus" cho thứ Ba)
+    // Chỗ này mang ý nghĩa kiểm tra ký tự hợp lệ hay k
+    const char *daysOfWeek[] = {"mon", "tus", "wed", "thu", "fri", "sat", "sun"};
+    int dayOfWeek = -1;
+    for (int i = 0; i < 7; i++) {
+        if (strcmp(weekday, daysOfWeek[i]) == 0) {
+            dayOfWeek = i;
+            break;
+        }
+    }
+    if (dayOfWeek == -1) {
+        printf("Thứ trong tuần không hợp lệ.\n");
+        return;
+    }
+
+    // Tính toán ngày bắt đầu và kết thúc của tuần
+    int startOfWeek = day - dayOfWeek;
+    int endOfWeek = startOfWeek + 6;
+
+    // Khai báo mảng listTaskInWeek để lưu trữ các công việc trong tuần
+    struct Task listTaskInWeek[MAX_NO_TASKS];
+
+    int count = 0;
+
+    // Duyệt qua danh sách công việc
+    for (int i = 0; i < no_tasks; i++) {
+
+        printf("task: %s \n", tasks[i].time);
+        int taskDayStart, taskMonthStart, taskYearStart;
+        int taskDayEnd, taskMonthEnd, taskYearEnd;
+
+        printf("1z \n");
+
+        // Sử dụng sscanf để trích xuất ngày, tháng, năm từ chuỗi thời gian công việc
+        if (sscanf(tasks[i].time, "%d:%*d|%d/%d/%d-%d:%*d|%d/%d/%d",
+                    &taskDayStart, &taskMonthStart, &taskYearStart,
+                    &taskDayEnd, &taskMonthEnd, &taskYearEnd) == 6) {
+            // printf("Lỗi trong định dạng thời gian công việc.\n");
+            // continue;
+
+             // In ra giá trị của các biến
+            printf("Task %d: Start Date: %d/%d/%d, End Date: %d/%d/%d\n",
+            i + 1, taskDayStart, taskMonthStart, taskYearStart, taskDayEnd, taskMonthEnd, taskYearEnd);
+        } 
+
+        // So sánh ngày công việc với khoảng thời gian của tuần
+        // if ((taskYearStart == year && taskMonthStart == month && taskDayStart >= startOfWeek && taskDayStart <= endOfWeek) ||
+        //     (taskYearEnd == year && taskMonthEnd == month && taskDayEnd >= startOfWeek && taskDayEnd <= endOfWeek)) {
+        //     // Nếu công việc nằm trong khoảng thời gian của tuần, thêm vào mảng listTaskInWeek
+        //     listTaskInWeek[count] = tasks[i];
+        //     count++;
+        // }
+
+    }
+
+    // In ra danh sách công việc trong tuần
+    // if (count == 0) {
+    //     printf("Không có công việc nào trong tuần này.\n");
+    // } else {
+    //     printf("Các công việc trong tuần:\n");
+    //     for (int i = 0; i < count; i++) {
+    //         printf("Task %d: %s\n", i + 1, listTaskInWeek[i].time);
+    //     }
+    // }
+}
+
+void testShowWeekTime()
+{
     char command[] = "show week time:[<date>]";
 }
 
 int main()
 {
 
+  
+
+
     // runTodoApp();
-     // edit #<num> title:[<title2>]
+    // edit #<num> title:[<title2>]
     // edit #<num> description:[<description2>]
     // edit #<num> time:[<time2>]
     // edit #<num> status:[<status2>]
 
-
     // test hàm addTask, thêm dữ liệu ban đầu để thực hiện các hàm show, edit, delete
     testAddTask();
+
+    printWeekTime(tasks, numTasks, "wed-15/11/2023");
 
     // Test hàm printTask
     // printAllTasks(tasks, numTasks);
 
     // Test hàm filterTitle Yêu cầu 14
-    printFilteredTaskByTitle(tasks, numTasks, "tit 3");
-
+    // printFilteredTaskByTitle(tasks, numTasks, "tit 3");
 
     // test show task 1
     // printTaskByNum(1);
