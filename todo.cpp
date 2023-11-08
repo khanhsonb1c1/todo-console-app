@@ -388,37 +388,6 @@ int getNumFromCommand(char *command)
     return -1; // Trả về -1 nếu không tìm thấy hoặc lỗi
 }
 
-// ================== Y/c 8 ====================================
-
-int getFieldFromEdit(char *edit_cmd)
-{
-    char *edit_title = strstr(edit_cmd, " title:[");
-    char *edit_description = strstr(edit_cmd, " description:[");
-    char *edit_time = strstr(edit_cmd, " time:[");
-    char *edit_status = strstr(edit_cmd, " status:[");
-
-    if (edit_title)
-    {
-        printf("1");
-        return 1; // Thay đổi title
-    }
-    else if (edit_description)
-    {
-        return 2; // Thay đổi description
-    }
-    else if (edit_time)
-    {
-        return 3; // Thay đổi time
-    }
-    else if (edit_status)
-    {
-        return 4; // Thay đổi status
-    }
-    else
-    {
-        return 0; // Không hợp lệ
-    }
-}
 
 // ================ Y/c 9 ================================
 
@@ -449,14 +418,51 @@ enum Status getStatusFromEdit(char *edit_cmd)
     return status;
 }
 
+
+// ================== Y/c 8 ====================================
+
+int getFieldFromEdit(char *edit_cmd)
+{
+    char *edit_title = strstr(edit_cmd, " title:[");
+    char *edit_description = strstr(edit_cmd, " description:[");
+    char *edit_time = strstr(edit_cmd, " time:[");
+    char *edit_status = strstr(edit_cmd, " status:[");
+
+    char *editOutline;
+
+    if (edit_title)
+    {
+        getTitleFromEdit(edit_cmd, editOutline);
+        return 1; // Thay đổi title
+    }
+    else if (edit_description)
+    {
+        getDescriptionFromEdit(edit_cmd, editOutline);
+        return 2; // Thay đổi description
+    }
+    else if (edit_time)
+    {   getTitleFromEdit(edit_cmd, editOutline);
+        return 3; // Thay đổi time
+    }
+    else if (edit_status)
+    {
+        getStatusFromEdit(edit_cmd);
+        return 4; // Thay đổi status
+    }
+    else
+    {
+        return 0; // Không hợp lệ
+    }
+}
+
 // ================ Y/c 10 =================
 
 void printAllTasks(struct Task *array_tasks, int no_tasks)
 // no_tasks: so luong phan tu trong mảng <=> numTasks đc khai báo ở dòng 43
 // array_tasks: mang <=> tasks được khai báo ở dòng 42
 {
-
-    for (int i = 0; i < no_tasks; i++)
+    int i;
+    for ( i = 0; i < no_tasks; i++)
     {
         struct Task *taskToDisplay = &array_tasks[i];
         printTask(taskToDisplay);
@@ -485,7 +491,8 @@ void printTaskByNum(struct Task *array_tasks, int no_tasks, int quan)
 void printHeadTask(struct Task *array_tasks, int numTasks, int num)
 {
     int printCount = (num < numTasks) ? num : numTasks; // Số lượng task cần hiển thị
-    for (int i = 0; i < printCount; i++)
+    int i;
+    for (i = 0; i < printCount; i++)
     {
         printf("%d. %s\n", i + 1, array_tasks[i].title);
     }
@@ -497,8 +504,8 @@ void printTailTask(struct Task *array_tasks, int no_tasks, int quan)
 {
     int startIdx = (no_tasks > quan) ? (no_tasks - quan) : 0; // Vị trí bắt đầu
     int endIdx = no_tasks;                                    // Vị trí kết thúc
-
-    for (int i = startIdx; i < endIdx; i++)
+    int i;
+    for (i = startIdx; i < endIdx; i++)
     {
         printf("%d. %s\n", i + 1, array_tasks[i].title);
     }
@@ -509,7 +516,8 @@ void printTailTask(struct Task *array_tasks, int no_tasks, int quan)
 void printFilteredTaskByTitle(struct Task *array_tasks, int no_tasks, const char *filter_title)
 {
     printf("task has title: \"%s\":\n", filter_title);
-    for (int i = 0; i < no_tasks; i++)
+    int i;
+    for (i = 0; i < no_tasks; i++)
     {
         if (strstr(array_tasks[i].title, filter_title))
         {
@@ -523,7 +531,8 @@ void printFilteredTaskByTitle(struct Task *array_tasks, int no_tasks, const char
 void printFilteredTaskByDescription(struct Task *array_tasks, int no_tasks, const char *filter_description)
 {
     printf("task has description: \"%s\":\n", filter_description);
-    for (int i = 0; i < no_tasks; i++)
+    int i;
+    for (i = 0; i < no_tasks; i++)
     {
         if (strstr(array_tasks[i].description, filter_description))
         {
@@ -537,7 +546,8 @@ void printFilteredTaskByDescription(struct Task *array_tasks, int no_tasks, cons
 void printFilteredTaskByStatus(struct Task *array_tasks, int no_tasks, enum Status filter_status)
 {
     printf("task has status: \"%s\":\n", status_name[filter_status]);
-    for (int i = 0; i < no_tasks; i++)
+    int i;
+    for (i = 0; i < no_tasks; i++)
     {
         if (array_tasks[i].status == filter_status)
         {
@@ -605,7 +615,8 @@ bool deleteTask(struct Task *array_tasks, int *no_tasks, int num)
     }
 
     // Di chuyển các task sau vị trí num lên để ghi đè task tại vị trí num
-    for (int i = num; i < (*no_tasks - 1); i++)
+    int i;
+    for ( i = num; i < (*no_tasks - 1); i++)
     {
         array_tasks[i] = array_tasks[i + 1];
     }
@@ -651,7 +662,8 @@ void printWeekCalendar(struct Task *list_task_in_week, int count)
     // In phần tiêu đề hàng đầu tiên
     printf("%*sTime%*s", timePadding, "", timePadding, "");
 
-    for (int i = 0; i < numDays; i++)
+    int i;
+    for ( i = 0; i < numDays; i++)
     {
         int padding = (WEEK_CELL_OTHER_COL_WIDTH - strlen(daysOfWeek[i])) / 2;
         printf("%*s%s%*s", padding, "", daysOfWeek[i], padding, "");
@@ -661,7 +673,8 @@ void printWeekCalendar(struct Task *list_task_in_week, int count)
 
     int printedTitles[MAX_NO_TASKS] = {0};
 
-    for (int hour = 1; hour <= 24; hour++)
+    int hour;
+    for (hour = 1; hour <= 24; hour++)
     {
         // Chuyển đổi giờ thành chuỗi và thêm "0" nếu cần
         char hourStr[3];
@@ -681,14 +694,15 @@ void printWeekCalendar(struct Task *list_task_in_week, int count)
         // In thời gian
         int firstColSpaces = (WEEK_CELL_FIRST_COL_WIDTH - 2) / 2;
         printf("%*s%s%*s", firstColSpaces, "", hourStr, firstColSpaces, "");
-
-        for (int i = 0; i < numDays; i++)
+        int i;
+        for (i = 0; i < numDays; i++)
         {
             int otherColSpaces = (WEEK_CELL_OTHER_COL_WIDTH - 1) / 2;
             printf("%*s", otherColSpaces, "");
 
             int isTaskPrinted = 0;
-            for (int j = 0; j < count; j++)
+            int j;
+            for (j = 0; j < count; j++)
             {
                 int taskHourStart, taskMinStart, taskHourEnd, taskMinEnd;
                 int dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd;
@@ -754,7 +768,8 @@ void printWeekTime(struct Task *tasks, int no_tasks, char *date)
     // Xác định thứ trong tuần dựa vào chuỗi weekday (ví dụ: "tus" cho thứ Ba)
     const char *daysOfWeek[] = {"mon", "tus", "wed", "thu", "fri", "sat", "sun"};
     int dayOfWeek = -1;
-    for (int i = 0; i < 7; i++)
+    int i;
+    for (i = 0; i < 7; i++)
     {
         if (strcmp(weekday, daysOfWeek[i]) == 0)
         {
@@ -777,13 +792,14 @@ void printWeekTime(struct Task *tasks, int no_tasks, char *date)
     int count = 0;
 
     // Duyệt qua danh sách công việc
-    for (int i = 0; i < no_tasks; i++)
+    int k;
+    for ( k = 0; i < no_tasks; i++)
     {
         int taskDayStart, taskMonthStart, taskYearStart;
         int taskDayEnd, taskMonthEnd, taskYearEnd;
         int taskHourStart, taskMinStart, taskHourEnd, taskMinEnd;
 
-        if (sscanf(tasks[i].time, "%d:%d|%d/%d/%d-%d:%d|%d/%d/%d",
+        if (sscanf(tasks[k].time, "%d:%d|%d/%d/%d-%d:%d|%d/%d/%d",
                    &taskHourStart, &taskMinStart, &taskDayStart, &taskMonthStart, &taskYearStart,
                    &taskHourEnd, &taskMinEnd, &taskDayEnd, &taskMonthEnd, &taskYearEnd) != 10)
         {
@@ -803,7 +819,7 @@ void printWeekTime(struct Task *tasks, int no_tasks, char *date)
             (taskYearEnd == year && taskMonthEnd == month && taskDayEnd >= startOfWeek && taskDayEnd <= endOfWeek))
         {
             // Nếu công việc nằm trong khoảng thời gian của tuần, thêm vào mảng listTaskInWeek
-            listTaskInWeek[count] = tasks[i];
+            listTaskInWeek[count] = tasks[k];
             count++;
         }
     }
@@ -816,7 +832,8 @@ void printWeekTime(struct Task *tasks, int no_tasks, char *date)
     else
     {
         printf("Danh sach cong viec:\n");
-        for (int i = 0; i < count; i++)
+        int i;
+        for ( i = 0; i < count; i++)
         {
             printf("Task %d: %s\n", i + 1, listTaskInWeek[i].time);
         }
@@ -974,9 +991,8 @@ void runTodoApp()
         }
         else if (commandType == EDIT)
         {
-            printf("Exit program.\n");
+            getFieldFromEdit(command);
 
-            // If the command is QUIT, exit the loop
             runTodoApp();
         }
         else if (commandType == DELETE)
